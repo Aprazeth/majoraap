@@ -102,8 +102,8 @@ $evernotebackup = $backuppath + $runtime + "_bkp_Evernote.enex"
 $evernoteexport = $backuppath + "EverNote_" + $runtime + "_export.log"
 $arguments = "exportNotes /q any:* /f $evernotebackup"
 
-Start-Process -FilePath "$evernotepath" -ArgumentList 'syncdatabase' -RedirectStandardOutput "$logfile" -WindowStyle Hidden
+Start-Process -FilePath "$evernotepath" -ArgumentList 'syncdatabase' -RedirectStandardOutput "$logfile" -WindowStyle Hidden -Wait
 
-Start-Process -FilePath "$evernotepath" -ArgumentList "$arguments" -RedirectStandardOutput "$evernoteexport" -WindowStyle Hidden
+Start-Process -FilePath "$evernotepath" -ArgumentList "$arguments" -RedirectStandardOutput "$evernoteexport" -WindowStyle Hidden -Wait
 
 Start-Process -FilePath "$cloudstorageprovider" -WindowStyle Minimized
