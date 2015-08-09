@@ -11,4 +11,4 @@
     https://github.com/Aprazeth/majoraap/
 #>
 (Get-ChildItem -Filter *.ps1 -Path ("$pwd.path") -Recurse ) | Unblock-File
-Write-Output "Done, all files should be unblocked now."
+Write-Output -InputObject "Done, all files should be unblocked now."
