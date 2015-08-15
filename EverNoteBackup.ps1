@@ -6,9 +6,9 @@
 
 .DESCRIPTION
     Created by: Mochtar van de Griendt
-    Version: 0.2.1
+    Version: 0.2.2
     Date: 17 May 2015
-    Modified: 9 Augustus 2015
+    Modified: 15 Augustus 2015
 
 	The script was created based of a CMD file I wrote some time ago, that
     would allow me to have a local EverNote backup. After searching the
@@ -93,16 +93,16 @@
 
 #>
 # Configure these for your machine.
-$evernotepath = "C:\Program Files (x86)\Evernote\Evernote\ENScript.exe"
-$cloudstorageprovider = "c:\Program Files (x86)\ownCloud\owncloud.exe"
-$backuppath = "C:\OwnCloud\EverNote\"
+[String]$evernotepath = "C:\Program Files (x86)\Evernote\Evernote\ENScript.exe"
+[String]$cloudstorageprovider = "c:\Program Files (x86)\ownCloud\owncloud.exe"
+[String]$backuppath = "C:\OwnCloud\EverNote\"
 # Only change this if you know what you are doing.
-$runtime = (Get-Date -Uformat "%Y-%m-%d_%H-%M")
+[String]$runtime = (Get-Date -Uformat "%Y-%m-%d_%H-%M")
 # Stop here - no further changes required.
-$logfile = $backuppath + "EverNote" + $runtime + "_sync.log"
-$evernotebackup = $backuppath + $runtime + "_bkp_Evernote.enex"
-$evernoteexport = $backuppath + "EverNote_" + $runtime + "_export.log"
-$arguments = "exportNotes /q any:* /f $evernotebackup"
+[String]$logfile = $backuppath + "EverNote" + $runtime + "_sync.log"
+[String]$evernotebackup = $backuppath + $runtime + "_bkp_Evernote.enex"
+[String]$evernoteexport = $backuppath + "EverNote_" + $runtime + "_export.log"
+[String]$arguments = "exportNotes /q any:* /f $evernotebackup"
 
 Start-Process -FilePath "$evernotepath" -ArgumentList 'syncdatabase' -RedirectStandardOutput "$logfile" -WindowStyle Hidden -Wait
 
