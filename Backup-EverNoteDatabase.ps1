@@ -47,6 +47,15 @@
     So an example would be:
 
         PowerShell -file "C:\OwnCloud\EverNote\Backup-EverNoteDatabase.ps1"
+.EXAMPLE
+	.\Backup-EverNoteDatabase.ps1 -EverNotePath "D:\EverNote\ENscript.exe" -BackupPath "E:\Backup\EverNote" -CloudStorageProvider "C:\Program Files (x86)\DropBox\DropBox.exe"
+	
+	--------------------------------------
+	
+	Running the script with full parameters specified, where EverNote
+	is installed on the D: drive, the backup-folder would be E:\Backup\EverNote
+	and the CloudStorageProvider is Dropbox, installed in the default location
+	on the C: drive.
 .LINK
     https://github.com/Aprazeth/majoraap
 .INPUTS
@@ -104,12 +113,12 @@ If (-NOT (Test-Path -LiteralPath $EverNotePath -PathType Leaf))
     } # END If NOT Test-Path $EverNotePath
 If (-NOT (Test-Path -LiteralPath $CloudStorageProvider -PathType Leaf))
     {
-        Write-Warning -Message "Path to EverNote is not valid, please provide the correct path via -CloudStorageProvider - Aborting script."
+        Write-Warning -Message "Path to Cloud Storage Provider is not valid, please provide the correct path via -CloudStorageProvider - Aborting script."
         Break
     } # END If NOT Test-Path $CloudStorageProvider
 If (-NOT (Test-Path -LiteralPath $BackupPath -PathType Container))
     {
-        Write-Warning -Message "Path to backup-folder is not valid, please provide the correct path via -BackupPath - Aborting script."
+        Write-Warning -Message "Path to the backup-folder is not valid, please provide the correct path via -BackupPath - Aborting script."
         Break
     } # END If NOT Test-Path $BackupPath
 [String]$RunTime = (Get-Date -Uformat "%Y-%m-%d_%H-%M")
