@@ -38,143 +38,103 @@
 
     Version 0.1 - Created 22 February 2017
     - Initial version.
+	Version 0.2 - Updated 16 March 2017
+	- Added ValidateScript for parameter input.
+	- Added a filter to the initial Select-String; this should skip lines containing '//', which are comments.
+	- Added beginning and closing comment to script.
+	- Corrected a few typo's/grammatical errors.
+	- Corrected casing of operators (-contains to -CONTAINS)
+	- Reformatted the PARAM block for readability.
+	- Replaced " with ' where applicable.
+	- Removed commented out section.
+	- Removed TODO: Upload to GitHub.
+	- Removed TODO: Rename some of the variables.
+	- Removed TODO: to add help information to parameters.
+	- Rewrote some of the error-output.
 
     TODO:
-    - Add proper help information to parameters.
     - Add SupportShouldProcess support.
     - Add improved error-catching/detection.
     - Investigate finding 'Category Class' information.
     - Cleanup the script.
-    - Rename some of the variables.
-    - Upload to GitHub.
 #>
 #Requires -version 3.0
 [CmdletBinding(
     HelpUri = 'https://github.com/Aprazeth/majoraap'
-    )]
+)]
 PARAM(
-    [Parameter(Mandatory = $True,
+    [Parameter(
+        Mandatory = $True,
         ValueFromPipeline = $True,
         ValueFromPipelineByPropertyName = $True, 
         Position = 0,
-        Helpmessage = 'Please provide the path to the location of the ARMA files.')]
-    [ValidateScript({
-        $True
-        })]
-    # ValidateScript for Test-Path goes here that the folder can be reached/found.
+        Helpmessage = 'Please provide the path to the location of the ARMA files.'
+    )]
+    [ValidateScript(
+        {
+            If (-NOT (Test-Path -Path $_ -Pathtype Container)) {
+                Throw 'Provided path is not a valid folder.'
+            }
+            $True
+        }
+    )]
     [String]$Location,
 
-    [Parameter(Mandatory = $True,
+    [Parameter(
+        Mandatory = $True,
         ValueFromPipeline = $False,
         ValueFromPipelineByPropertyName = $False, 
         Position = 1,
-        Helpmessage = 'Please provide the path and filename where to store the output.')]
-    [ValidateScript({
-        $True
-        })]
-    # ValidateScript for Test-Path goes here to ensure it's not a folder/container.
-    [String]$OutputFileName
-    )
-<#
-function Verb-Noun
-{
-    [CmdletBinding(DefaultParameterSetName='Parameter Set 1', 
-                  SupportsShouldProcess=$true, 
-                  PositionalBinding=$false,
-                  HelpUri = 'http://www.microsoft.com/',
-                  ConfirmImpact='Medium')]
-    [Alias()]
-    [OutputType([String])]
-    Param
-    (
-        # Param1 help description
-        [Parameter(Mandatory=$true, 
-                   ValueFromPipeline=$true,
-                   ValueFromPipelineByPropertyName=$true, 
-                   ValueFromRemainingArguments=$false, 
-                   Position=0,
-                   ParameterSetName='Parameter Set 1')]
-        [ValidateNotNull()]
-        [ValidateNotNullOrEmpty()]
-        [ValidateCount(0,5)]
-        [ValidateSet("sun", "moon", "earth")]
-        [Alias("p1")] 
-        $Param1,
-
-        # Param2 help description
-        [Parameter(ParameterSetName='Parameter Set 1')]
-        [AllowNull()]
-        [AllowEmptyCollection()]
-        [AllowEmptyString()]
-        [ValidateScript({$true})]
-        [ValidateRange(0,5)]
-        [int]
-        $Param2,
-
-        # Param3 help description
-        [Parameter(ParameterSetName='Another Parameter Set')]
-        [ValidatePattern("[a-z]*")]
-        [ValidateLength(0,15)]
-        [String]
-        $Param3
-    )
-
-    Begin
-    {
-    }
-    Process
-    {
-        if ($pscmdlet.ShouldProcess("Target", "Operation"))
+        Helpmessage = 'Please provide the path and filename where to store the output.'
+    )]
+    [ValidateScript(
         {
+            If (Test-Path -Path $_ -PathType Container) {
+                Throw 'Provided OutputFileName is not a file, but a folder.'
+            }
+            $True
         }
-    }
-    End
-    {
-    }
-}
-#>
+    )]
+    [String]$OutputFileName
+)
+Write-Output -InputObject 'Script started.'
 [String[]]$ARMALocation = (Get-ChildItem -Path $Location -Recurse -Filter ItemList*.hpp).FullName
-ForEach ($FileName in $ARMALocation)
-    {
-        [String[]]$ItemList = ((Get-Content -Path $FileName) | Select-String -Pattern class)
-        If ('',$NULL -contains $ItemList)
-            {
-                Write-Warning -Message "Yeah, skipping $($FileName)."
-                Break;
-            } # END If ItemList contains null ''
-        ForEach($Item in $ItemList)
-            {
-                [String]$ItemName = ($Item.Trim())
-                [String]$Class = ((($ItemName.Split(' ', "3")[1]).Replace('{','')).Trim(''))
-                # If it looks stupid but it works...
-                If ('',$NULL -CONTAINS $Class)
-                    {
-                        Write-Warning -Message 'Yeah, skipping this one because it has no data'
-                        Write-Verbose -Message "$($ItemName)"
-                        Break
-                    } # If Class contains null ''
-                Try
-                    {
-                        # TODO: ADD Category Class
-                        $Data = [Ordered]@{
-                            "FileName" = ($FileName) ;
-                            "Category Class" = "Unknown" ;
-                            "Class" = $Class ;
-                            "Quality" = ((($ItemName.Split(' ', "3")[2]).Split(';', "3").Trim()[0]).Split('=', "2").Trim())[1] ;
-                            "Price" = ((($ItemName.Split(' ', "3")[2]).Split(';', "3").Trim()[1]).Split('=', "2").Trim())[1]
-                            } # END Data
-                        New-Object -TypeName PSObject -Property $Data | Export-Csv -Path $OutputFileName -NoTypeInformation -Append
-                    } # END Try Data 
-                Catch
-                    {
-                        Write-Warning -Message "Yeah, skipping $($FileName) because of no data."
-                        Write-Verbose -Message "Item = $($Item)"
-                        Write-Verbose -Message "FileName = $($FileName)"
-                        Write-Verbose -Message "Category Class = unknown"
-                        Write-Verbose -Message "Class = $($Class)"
-                        # Next line is where it usually break - so ItemName contains incorrect data when reading comment lines that contains 'class'.
-                        Write-Verbose -Message "Quality = $((($ItemName.Split(' ', "3")[2]).Split(';', "3").Trim()[0]).Split('=', "2").Trim())[1] "
-                        Write-Verbose -Message "Price = $((($ItemName.Split(' ', "3")[2]).Split(';', "3").Trim()[1]).Split('=', "2").Trim())[1] "
-                    } # END Catch Data
-            } # END ForEach Item in ItemList
-    } # END ForEach FileName in ARMALocation
+ForEach ($FileName in $ARMALocation) {
+    [String[]]$ItemList = ((Get-Content -Path $FileName) | Select-String -Pattern 'class' | Select-String -Pattern '//' -NotMatch)
+    If ('', $NULL -CONTAINS $ItemList) {
+        Write-Warning -Message "Skipping $($FileName) because it contains no data."
+        Break;
+    } # END If ItemList contains null ''
+    ForEach ($Item in $ItemList) {
+        [String]$ItemName = ($Item.Trim())
+        [String]$Class = ((($ItemName.Split(' ', '3')[1]).Replace('{', '')).Trim(''))
+        # If it looks stupid but it works...
+        If ('', $NULL -CONTAINS $Class) {
+            Write-Warning -Message 'Skipping current item because it contains no data'
+            Write-Verbose -Message "$($ItemName)"
+            Break
+        } # If Class contains null ''
+        Try {
+            # TODO: ADD Category Class
+            $Data = [Ordered]@{
+                'FileName'       = ($FileName) ;
+                'Category Class' = 'Unknown' ;
+                'Class'          = $Class ;
+                'Quality'        = ((($ItemName.Split(' ', '3')[2]).Split(';', '3').Trim()[0]).Split('=', '2').Trim())[1] ;
+                'Price'          = ((($ItemName.Split(' ', '3')[2]).Split(';', '3').Trim()[1]).Split('=', '2').Trim())[1]
+            } # END Data
+            New-Object -TypeName PSObject -Property $Data | Export-Csv -Path $OutputFileName -NoTypeInformation -Append
+        } # END Try Data 
+        Catch {
+            Write-Warning -Message "Skipping $($FileName) because it contains no data."
+            Write-Verbose -Message "Item = $($Item)"
+            Write-Verbose -Message "FileName = $($FileName)"
+            Write-Verbose -Message "Category Class = unknown"
+            Write-Verbose -Message "Class = $($Class)"
+            # Next line is where it usually breaks - so ItemName contains incorrect data when reading comment lines that contains 'class'.
+            Write-Verbose -Message "Quality = $((($ItemName.Split(' ', "3")[2]).Split(';', "3").Trim()[0]).Split('=', "2").Trim())[1] "
+            Write-Verbose -Message "Price = $((($ItemName.Split(' ', "3")[2]).Split(';', "3").Trim()[1]).Split('=', "2").Trim())[1] "
+        } # END Catch Data
+    } # END ForEach Item in ItemList
+} # END ForEach FileName in ARMALocation
+Write-Output -InputObject "Script completed; output saved at $($OutputFileName)."
