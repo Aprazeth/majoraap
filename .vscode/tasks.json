@@ -1,0 +1,43 @@
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
+// A task runner that calls pester for powershell testing.
+// http://www.tomsitpro.com/articles/setting-up-visual-studio-code-tasks,1-3514.html
+// Modified 28 July 2017
+{
+    "version": "0.1.0",
+
+   "windows": {
+        "command": "powershell"
+    },
+   "osx": {
+         "command": "/usr/local/microsoft/powershell/6.0.0-alpha.15/powershell" 
+   },
+
+    // The command is a shell script
+    "isShellCommand": true,
+
+   // Show the output window only if unrecognized errors occur.
+    "showOutput": "always",
+
+    "suppressTaskName": true,
+    "tasks": [
+        {
+            "taskName": "Pester Test Project",
+            "isTestCommand": true,
+            // Changes to the original are done here: Added ExecutionPolicy ByPass and enclosed ${fileDirname} in single quotes
+            // to ensure paths with a space also will work.
+            "args": [
+                "-ExecutionPolicy", "ByPass", "-Command", "Invoke-Pester -Path '${fileDirname}'"
+            ],
+            "problemMatcher": { 
+               "owner": "pester",
+                "pattern": {
+                    "regexp": "(.*);(.*);(.*)",
+                    "file": 1,
+                    "line": 2,
+                    "message": 3
+                }
+            }
+        }
+    ]
+}
