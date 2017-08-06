@@ -21,7 +21,7 @@ For ease of use, and consistency, I have also included the settings I use in Vis
 Other settings, extensions, and other tidbits I highly recommend:
 
 * Visual Studio Code
-    * Icons: vscode-icons
+    * Icons: Material Icon theme 
     * Theme: Monokai
     * Font: Fira Code font (including the recommended setting to enable font ligatures)
     * Extensions
@@ -29,6 +29,8 @@ Other settings, extensions, and other tidbits I highly recommend:
         * Markdown All in One
         * CodeShell
         * Auto-Open Markdown preview
+        * gitignore
+        * Git History (git log)
 * Pester
 * ScriptAnalyzer
 
