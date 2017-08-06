@@ -14,7 +14,6 @@
     TODO:
     * Test functionality when unblocking a file fails 
         * Unblocking a read-only file has a bug >> https://github.com/PowerShell/PowerShell/issues/4390
-    * Test functionality when using -WhatIf
 .EXAMPLE
     .\Invoke-Pester
 
@@ -39,6 +38,21 @@ Describe -Name 'Functionality' -Tag 'Functionality' {
         .\Set-UnblockPS1.ps1 -Path $Testpath
         $Result = Get-Item -Path $TestPath  -Stream 'Zone.Identifier' -ErrorAction SilentlyContinue
         $Result | Should benullorempty
+    }
+    It 'Does work correctly with WhatIf output' {
+        $TestWhatIfPath = "Testdrive:\TestWhatIf.ps1"
+        Set-Content -Path $TestWhatIfPath -value 'Break'
+        $ZoneIdentifier = {
+            [ZoneTransfer]
+            ZoneId=3
+        }
+        Set-Content -Path $TestWhatIfPath -Value $ZoneIdentifier -Stream 'Zone.Identifier'
+        Start-Transcript -Path "Testdrive:\WhatIf.txt"
+        .\Set-UnblockPS1.ps1 -Path $TestWhatIfPath -WhatIf 
+        Stop-Transcript
+        $WhatIfTest = Get-Content -Path "Testdrive:\WhatIf.txt"
+        $WhatIfResult = $WhatIfTest | Select-String -Pattern 'What if: Performing the operation "Unblock-File" on target'
+        $WhatIfResult | Should not benullorempty
     }
 }
 Describe -Name 'ErrorHandling' -Tag 'ErrorHandling' {
