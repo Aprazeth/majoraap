@@ -35,22 +35,7 @@
         3. (Read/Write)Access to folder/file for output file.
     
     VERSION HISTORY:
-
-    Version 0.1 - Created 22 February 2017
-    - Initial version.
-	Version 0.2 - Updated 16 March 2017
-	- Added ValidateScript for parameter input.
-	- Added a filter to the initial Select-String; this should skip lines containing '//', which are comments.
-	- Added beginning and closing comment to script.
-	- Corrected a few typo's/grammatical errors.
-	- Corrected casing of operators (-contains to -CONTAINS)
-	- Reformatted the PARAM block for readability.
-	- Replaced " with ' where applicable.
-	- Removed commented out section.
-	- Removed TODO: Upload to GitHub.
-	- Removed TODO: Rename some of the variables.
-	- Removed TODO: to add help information to parameters.
-	- Rewrote some of the error-output.
+    0.3 - Please check Github for changes
 
     TODO:
     - Add SupportShouldProcess support.
@@ -98,7 +83,18 @@ PARAM(
     [String]$OutputFileName
 )
 Write-Output -InputObject 'Script started.'
+If (Test-Path -Path $OutputFileName) {
+    [String]$Overwrite = Read-Host -Prompt "File $($OutputFileName) already exists; do you wish to overwrite it? [Y/N]"
+    If ($Overwrite -NE 'y') {
+        Write-Warning -Message "OutputFile already exists; not overwriting file."
+        Exit 1
+    } # END If Overwrite NE y
+} # END If Test-Path OutputFileName
 [String[]]$ARMALocation = (Get-ChildItem -Path $Location -Recurse -Filter ItemList*.hpp).FullName
+If ($NULL -EQ $ARMALocation) {
+    Write-Warning -Message "No ARMA files found in '$($Location)'."
+    Exit 1
+} # End If NULL EQ ARMALocation
 ForEach ($FileName in $ARMALocation) {
     [String[]]$ItemList = ((Get-Content -Path $FileName) | Select-String -Pattern 'class' | Select-String -Pattern '//' -NotMatch)
     If ('', $NULL -CONTAINS $ItemList) {
