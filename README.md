@@ -4,7 +4,7 @@
   - [Description](#description)
     - [Quick listing of my scripts](#quick-listing-of-my-scripts)
       - [Settings, extensions I use(d) and recommend](#settings-extensions-i-use-d-and-recommend)
-    - [Why the name **majoraap**?](#why-the-name-majoraap)
+    - [Why the name **majoraap**](#why-the-name-majoraap)
 
 ## Description
 
