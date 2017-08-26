@@ -70,10 +70,9 @@ PARAM(
     )]
     [ValidateScript(
         {
-            If (-NOT (Test-Path -Path $_ -IsValid))
-                {
-                    Throw 'Invalid path'
-                }
+            If (-NOT (Test-Path -Path $_ -IsValid)) {
+                Throw 'Invalid path'
+            }
             $True
         }
     )]

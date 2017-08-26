@@ -70,93 +70,85 @@
 #requires -version 2.0
 [CmdletBinding()]
 PARAM(
-    [Parameter(Mandatory=$False,
-                ValueFromPipelineByPropertyName=$True,
-                Position=0)]
+    [Parameter(
+        Mandatory = $False,
+        ValueFromPipelineByPropertyName = $True,
+        Position = 0
+    )]
     [String]$EverNotePath = "${env:ProgramFiles(x86)}\Evernote\Evernote\ENScript.exe",
 
-    [Parameter(Mandatory=$False,
-                ValueFromPipelineByPropertyName=$True,
-                Position=1)]
+    [Parameter(
+        Mandatory = $False,
+        ValueFromPipelineByPropertyName = $True,
+        Position = 1
+    )]
     [String]$CloudStorageProvider = "${env:ProgramFiles(x86)}\ownCloud\owncloud.exe",
     
-    [Parameter(Mandatory=$False,
-                ValueFromPipelineByPropertyName=$True,
-                Position=2)]
+    [Parameter(
+        Mandatory = $False,
+        ValueFromPipelineByPropertyName = $True,
+        Position = 2
+    )]
     [String]$BackupPath = "C:\OwnCloud\EverNote\"
     )
 Write-Output -InputObject "Script started at $(Get-Date)"
-If (-NOT ($EverNotePath).EndsWith("ENScript.exe"))
-    {
-        Write-Debug -Message "Provided EverNotePath does not end with ENScript.exe - checking if it is a folder"
-        If (Test-Path -LiteralPath $EverNotePath -PathType Container)
-            {
-                Write-Debug -Message "Confirmed it's a folder"
-                If (($EverNotePath).EndsWith("\"))
-                    {
-                        Write-Debug -Message "EverNotePath ends with \ - appending ENScript.exe"
-                        $EverNotePath = ($EverNotePath) + "ENScript.exe"
-                        Write-Debug -Message "`$EverNotePath value is now $($EverNotePath)"
-                    } # END If $EverNotePath end with \
-                Else
-                    {
-                        Write-Debug -Message "EverNotePath ends with \ - appending ENScript.exe"
-                        $EverNotePath = ($EverNotePath) + "\ENScript.exe"
-                        Write-Debug -Message "`$EverNotePath value is now $($EverNotePath)"
-                    } # END Else $EverNotePath end with \
-            } # END If Test-Path $EverNotePath Container
-    } # END If NOT $EverNotePath endswith ENScript.exe
-If (-NOT (Test-Path -LiteralPath $EverNotePath -PathType Leaf))
-    {
-        Write-Warning -Message "Path to EverNote is not valid, please provide the correct path via -EverNotePath - Aborting script."
-        Break
-    } # END If NOT Test-Path $EverNotePath
-If (-NOT (Test-Path -LiteralPath $CloudStorageProvider -PathType Leaf))
-    {
-        Write-Warning -Message "Path to Cloud Storage Provider is not valid, please provide the correct path via -CloudStorageProvider - Aborting script."
-        Break
-    } # END If NOT Test-Path $CloudStorageProvider
-If (-NOT (Test-Path -LiteralPath $BackupPath -PathType Container))
-    {
-        Write-Warning -Message "Path to the backup-folder is not valid, please provide the correct path via -BackupPath - Aborting script."
-        Break
-    } # END If NOT Test-Path $BackupPath
+If (-NOT ($EverNotePath).EndsWith("ENScript.exe")) {
+    Write-Debug -Message "Provided EverNotePath does not end with ENScript.exe - checking if it is a folder"
+    If (Test-Path -LiteralPath $EverNotePath -PathType Container) {
+        Write-Debug -Message "Confirmed it's a folder"
+        If (($EverNotePath).EndsWith("\")) {
+            Write-Debug -Message "EverNotePath ends with \ - appending ENScript.exe"
+            $EverNotePath = ($EverNotePath) + "ENScript.exe"
+            Write-Debug -Message "`$EverNotePath value is now $($EverNotePath)"
+        } # END If $EverNotePath end with \
+        Else {
+            Write-Debug -Message "EverNotePath ends with \ - appending ENScript.exe"
+            $EverNotePath = ($EverNotePath) + "\ENScript.exe"
+            Write-Debug -Message "`$EverNotePath value is now $($EverNotePath)"
+        } # END Else $EverNotePath end with \
+    } # END If Test-Path $EverNotePath Container
+} # END If NOT $EverNotePath endswith ENScript.exe
+If (-NOT (Test-Path -LiteralPath $EverNotePath -PathType Leaf)) {
+    Write-Warning -Message "Path to EverNote is not valid, please provide the correct path via -EverNotePath - Aborting script."
+    Break
+} # END If NOT Test-Path $EverNotePath
+If (-NOT (Test-Path -LiteralPath $CloudStorageProvider -PathType Leaf)) {
+    Write-Warning -Message "Path to Cloud Storage Provider is not valid, please provide the correct path via -CloudStorageProvider - Aborting script."
+    Break
+} # END If NOT Test-Path $CloudStorageProvider
+If (-NOT (Test-Path -LiteralPath $BackupPath -PathType Container)) {
+    Write-Warning -Message "Path to the backup-folder is not valid, please provide the correct path via -BackupPath - Aborting script."
+    Break
+} # END If NOT Test-Path $BackupPath
 [String]$RunTime = (Get-Date -Uformat "%Y-%m-%d_%H-%M")
 [String]$LogFile = $BackupPath + "EverNote" + $RunTime + "_sync.log"
 [String]$EverNoteBackup = $BackupPath + $RunTime + "_bkp_Evernote.enex"
 [String]$EverNoteExport = $BackupPath + "EverNote_" + $RunTime + "_export.log"
 [String]$Arguments = "exportNotes /q any:* /f $EverNoteBackup"
-Try
-    {
-        Start-Process -FilePath "$EverNotePath" -ArgumentList 'syncdatabase' -RedirectStandardOutput "$LogFile" -WindowStyle Hidden -Wait
-    } # END Try Start-Process $EverNotePath syncdatabase
-Catch
-    {
-        Write-Warning -Message "Failed to start Evernote sync - please check if you have the necessary permissions - Aborting script."
-        Write-Debug -Message "($Error) | Format-List -Force"
-        Break
-    } # END Catch Start-Process $EverNotePath syncdatabase
-Try
-    {
-        Start-Process -FilePath "$EverNotePath" -ArgumentList "$Arguments" -RedirectStandardOutput "$EverNoteExport" -WindowStyle Hidden -Wait
-    } # END Try Start-Process $EverNotePath $Arguments
-Catch
-    {
-        Write-Warning -Message "Failed to export Evernote database - please check if you have the necessary permissions - Aborting script."
-        Write-Debug -Message "($Error) | Format-List -Force"
-        Break
-    } # END Catch Start-Process $EverNotePath $Arguments
-Try
-    {
-        Start-Process -FilePath "$CloudStorageProvider" -WindowStyle Minimized
-    } # END Try Start-Process $CloudStorageProvider
-Catch
-    {
-        Write-Warning -Message "Failed to start your CloudStorageProvider - please check if you have the necessary permissions - Aborting script."
-        Write-Debug -Message "($Error) | Format-List -Force"
-        Break
-    } # END Catch Start-Process $CloudStorageProvider
-Finally
-    {
-        Write-Output -InputObject "Script completed at $(Get-Date)"
-    } # END Finally
+Try {
+    Start-Process -FilePath "$EverNotePath" -ArgumentList 'syncdatabase' -RedirectStandardOutput "$LogFile" -WindowStyle Hidden -Wait
+} # END Try Start-Process $EverNotePath syncdatabase
+Catch {
+    Write-Warning -Message "Failed to start Evernote sync - please check if you have the necessary permissions - Aborting script."
+    Write-Debug -Message "($Error) | Format-List -Force"
+    Break
+} # END Catch Start-Process $EverNotePath syncdatabase
+Try {
+    Start-Process -FilePath "$EverNotePath" -ArgumentList "$Arguments" -RedirectStandardOutput "$EverNoteExport" -WindowStyle Hidden -Wait
+} # END Try Start-Process $EverNotePath $Arguments
+Catch {
+    Write-Warning -Message "Failed to export Evernote database - please check if you have the necessary permissions - Aborting script."
+    Write-Debug -Message "($Error) | Format-List -Force"
+    Break
+} # END Catch Start-Process $EverNotePath $Arguments
+Try {
+    Start-Process -FilePath "$CloudStorageProvider" -WindowStyle Minimized
+} # END Try Start-Process $CloudStorageProvider
+Catch {
+    Write-Warning -Message "Failed to start your CloudStorageProvider - please check if you have the necessary permissions - Aborting script."
+    Write-Debug -Message "($Error) | Format-List -Force"
+    Break
+} # END Catch Start-Process $CloudStorageProvider
+Finally {
+    Write-Output -InputObject "Script completed at $(Get-Date)"
+} # END Finally

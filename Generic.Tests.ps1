@@ -11,7 +11,7 @@
     VERSION:
     0.1 - Created 28 July 2017
 
-    Credits go out to http://www.tomsitpro.com/articles/setting-up-visual-studio-code-tasks,1-3514.html
+    Credits go out to https://www.tomsitpro.com/articles/setting-up-visual-studio-code-tasks,1-3514.html
     for creating the original draft, upon which I've expanded by adding ScriptAnalyzer, adding the
     commentblock etc.
 .EXAMPLE
@@ -47,14 +47,14 @@ Get-ChildItem -Path $Here\* -Include '*.ps1', '*.psm1' -Recurse | ForEach-Object
     Describe 'Help' -Tags 'Help' {
         Context "Function - $_" { 
             It 'Synopsis' {
-                Get-Help $_.FullName | Select-Object -ExpandProperty synopsis -ErrorAction SilentlyContinue | should not benullorempty
+                Get-Help -Name $_.FullName | Select-Object -ExpandProperty synopsis -ErrorAction SilentlyContinue | should not benullorempty
             }
             It 'Description' {
-                Get-Help $_.FullName | Select-Object -ExpandProperty Description -ErrorAction SilentlyContinue | should not benullorempty
+                Get-Help -Name $_.FullName | Select-Object -ExpandProperty Description -ErrorAction SilentlyContinue | should not benullorempty
             }
             It 'Examples' {
 
-                $Examples = Get-Help $_.FullName | Select-Object -ExpandProperty Examples -ErrorAction SilentlyContinue | Measure-Object 
+                $Examples = Get-Help -Name $_.FullName | Select-Object -ExpandProperty Examples -ErrorAction SilentlyContinue | Measure-Object 
                 $Examples.Count -gt 0 | Should be $true
             }
         }
