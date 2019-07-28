@@ -14,27 +14,29 @@
     None
 .OUTPUTS
     System.String (displayed in console) if any
+.LINK
+    https://github.com/Aprazeth/majoraap
 .NOTES
     VERSION
-    0.1 - Original release created by aprazeth
-    0.2 - 27 July 2019 - aprazeth
+    0.1 - Original release created by Aprazeth
+    0.2 - 27 July 2019 - Aprazeth
     - Added detection for CPU specific features
     - Added links if warnings get triggered (some)
     - Added detections for Windows 10 Sandbox, Windows Subsystem for Linux
-    0.3 - 27 July 2019 - aprazeth
+    0.3 - 27 July 2019 - Aprazeth
     - Added detection for Oracle VM VirtualBox
     - Fixed a grammatical error in message for HyperVisorPresent
-    0.4 - 27 July 2019 - aprazeth
+    0.4 - 27 July 2019 - Aprazeth
     - Added detection for manufacturer being set to Microsoft Corporation
-    0.5 - 27 July 2019 - aprazeth
+    0.5 - 27 July 2019 - Aprazeth
     - Fixed a bug with detecting the Manufacturer registry-key if there was OEM-information set, but not manufacturer
-    0.6 - 27 July 2019 - aprazeth
+    0.6 - 27 July 2019 - Aprazeth
     - Added some system information output (CPU, RAM, GPU, resolution)
-    0.7 - 27 July 2019 - aprazeth
+    0.7 - 27 July 2019 - Aprazeth
     - Added several other Windows Optional Features as potential cause (after checking a list of those)
     - Changed variable OriginalList to only record the FeatureName
     - Added check for Core Isolation Memory Integrity in Windows Defender
-    0.7.1 - 28 July 2019 - aprazeth
+    0.7.1 - 28 July 2019 - Aprazeth
     - Commented out line that created the log-file for installed Windows Features
     - Added motherboard manufacturer and model to support information
     - Added example to script
@@ -44,6 +46,9 @@
     0.7.2 - 28 July 2019 - Aprazeth
     - Modified the Warning message for the ComputerName containing DESKTOP to clarify it is currently an unconfirmed cause.
     - Modified the WMI Class used to retrieve motherboard information (should give better/more accurate results)
+    0.7.3 28 July 2019 - Aprazeth
+    - Added to personal GitHub repository https://github.com/Aprazeth/majoraap (also in link)
+    - Changed capitalization of username throughout notes for consistency
 #>
 #requires -version 5.0
 #requires -RunAsAdministrator
@@ -82,7 +87,7 @@ $UnconfirmedList =
     'VirtualMachinePlatform'
 ForEach ($UnconfirmedListItem in $UnconfirmedList) {
     If ($UnconfirmedListItem -IN $OriginalList) {
-        Write-Host -InputObject "Detected $UnconfirmedListItem - this is a currently unconfirmed but suspected cause !"
+        Write-Output -InputObject "Detected $UnconfirmedListItem - this is a currently unconfirmed but suspected cause !"
     } # END If UnconfirmedListItem in OriginalList
 } # END ForEach UnconfirmedListItem in UnconfirmedList
 $VirtualBox = Get-CimInstance -ClassName Win32_Product | Where-Object { $_.Name -LIKE "VirtualBox" }
@@ -119,7 +124,7 @@ If ($NULL -NE $OEMInformation) {
 # Support information
 # Reference: https://blogs.technet.microsoft.com/askpfeplat/2017/07/19/viewing-memory-in-powershell/
 $Vid = Get-CimInstance -ClassName Win32_VideoController
-Write-Host -Object "`r`nSupport information:
+Write-Output -InputObject -Object "`r`nSupport information:
 `tCPU : $((Get-CimInstance -ClassName Win32_Processor).Name)
 `tRAM : $([INT]((Get-CimInstance -ClassName Win32_ComputerSystem | Select-Object -ExpandProperty TotalPhysicalMemory) / 1GB)) GB
 `tMotherboard Manufacturer: $((Get-CimInstance -ClassName Win32_BaseBoard).Manufacturer)
