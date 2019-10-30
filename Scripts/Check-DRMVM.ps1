@@ -49,13 +49,15 @@
     0.7.3 28 July 2019 - Aprazeth
     - Added to personal GitHub repository https://github.com/Aprazeth/majoraap (also in link)
     - Changed capitalization of username throughout notes for consistency
+    0.7.4 28 July 2019 - Aprazeth
+    - Changed Write-Host to Write-Output for increased compatibility (best practices)
+    - Removed commented out line to export installed Windows Optional Features to a file
 #>
 #requires -version 5.0
 #requires -RunAsAdministrator
 [CmdletBinding()]
 PARAM()
 $OriginalList = Get-WindowsOptionalFeature -Online | Where-Object {$_.State -NE 'Disabled'} | Select-Object -ExpandProperty FeatureName
-# Out-File -InputObject $OriginalList -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'DRMVMCheck.log' )
 $HyperV = $OriginalList | Where-Object {$_.FeatureName -LIKE "*Hyper-V*"}
 If ($NULL -NE $HyperV) {
     Write-Warning -Message "Hyper-V has been installed on your machine ! `r`nVisit 'https://answers.microsoft.com/en-us/windows/forum/windows_8-windows_install/how-do-i-uninstall-hyper-v/7d268911-47cd-4c52-bfe5-ea41e58067ab' to see how to remove the feature (or Google it)."
