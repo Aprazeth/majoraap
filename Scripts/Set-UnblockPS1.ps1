@@ -20,7 +20,7 @@
 
     -----
 
-    This runs the script, which will unblock all PowerShell Scripts in the folder 'C:\PS1' and all folders 
+    This runs the script, which will unblock all PowerShell Scripts in the folder 'C:\PS1' and all folders
     underneath (recursively)
 .INPUTS
     System.String
@@ -79,7 +79,7 @@ PARAM(
     $Path = $PWD
 )
 Try {
-    $FileList = Get-ChildItem -Filter '*.ps1' -Path $Path -Recurse 
+    $FileList = Get-ChildItem -Filter '*.ps1' -Path $Path -Recurse
     ForEach ($FileItem in $FileList) {
         Try {
             Unblock-File -Path $FileItem

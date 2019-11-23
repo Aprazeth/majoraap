@@ -32,7 +32,7 @@
 $Here = Split-Path -Parent $MyInvocation.MyCommand.Path
 Get-ChildItem -Path $Here\* -Include '*.ps1', '*.psm1' -Recurse | ForEach-Object {
     Describe 'ScriptAnalyzer' -Tags 'ScriptAnalyzer' {
-        Context "Messages - $_" { 
+        Context "Messages - $_" {
             It 'Errors should be 0' {
                 (Invoke-ScriptAnalyzer -Path $_.FullName -Severity 'Error').Count | Should Be 0
             }
@@ -45,7 +45,7 @@ Get-ChildItem -Path $Here\* -Include '*.ps1', '*.psm1' -Recurse | ForEach-Object
         }
     }
     Describe 'Help' -Tags 'Help' {
-        Context "Function - $_" { 
+        Context "Function - $_" {
             It 'Synopsis' {
                 Get-Help -Name $_.FullName | Select-Object -ExpandProperty synopsis -ErrorAction SilentlyContinue | should not benullorempty
             }
@@ -54,7 +54,7 @@ Get-ChildItem -Path $Here\* -Include '*.ps1', '*.psm1' -Recurse | ForEach-Object
             }
             It 'Examples' {
 
-                $Examples = Get-Help -Name $_.FullName | Select-Object -ExpandProperty Examples -ErrorAction SilentlyContinue | Measure-Object 
+                $Examples = Get-Help -Name $_.FullName | Select-Object -ExpandProperty Examples -ErrorAction SilentlyContinue | Measure-Object
                 $Examples.Count -gt 0 | Should be $true
             }
         }

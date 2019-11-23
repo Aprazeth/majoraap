@@ -12,20 +12,20 @@
     got started in using PowerShell I figured it would be a great candidate
     to get converted into a PowerShell script.
 
-    The script sets several variables, that you can alter via parameters, such as 
-    the install-path of EverNote, the cloud software you want to use, 
+    The script sets several variables, that you can alter via parameters, such as
+    the install-path of EverNote, the cloud software you want to use,
     as well as the location of exported EverNote database.
 .PARAMETER EverNotePath
 	This variable needs to be set to where your EverNote installation is. By
-    default it will be in C:\Program Files (x86)\Evernote\Evernote\ so you 
-    most likely won't need to provide this. Observe that the ENscript.exe 
+    default it will be in C:\Program Files (x86)\Evernote\Evernote\ so you
+    most likely won't need to provide this. Observe that the ENscript.exe
     must be at the end!
 
     A default value is provided if none is specified.
 .PARAMETER CloudStorageProvider
     This variable needs to be configured to whereever your cloud storage
     provider software is installed. Whether this is DropBox, Box, OneDrive
-    OwnCloud, SpiderOak, etc. - be sure to include the executable's name of 
+    OwnCloud, SpiderOak, etc. - be sure to include the executable's name of
     the software!
 
     A default value is provided if none is specified.
@@ -36,7 +36,7 @@
 
     A default value is provided if none is specified.
 .EXAMPLE
-	This script can be used with the Task scheduler in Windows, to run as a 
+	This script can be used with the Task scheduler in Windows, to run as a
     scheduled task OR you can run it manually whenever you want or need it.
 
     The commandline you will need to enter for the Script to run as a scheduled
@@ -49,9 +49,9 @@
         PowerShell -file "C:\OwnCloud\EverNote\Backup-EverNoteDatabase.ps1"
 .EXAMPLE
 	.\Backup-EverNoteDatabase.ps1 -EverNotePath "D:\EverNote\ENscript.exe" -BackupPath "E:\Backup\EverNote" -CloudStorageProvider "C:\Program Files (x86)\DropBox\DropBox.exe"
-	
+
 	--------------------------------------
-	
+
 	Running the script with full parameters specified, where EverNote
 	is installed on the D: drive, the backup-folder would be E:\Backup\EverNote
 	and the CloudStorageProvider is Dropbox, installed in the default location
@@ -63,7 +63,7 @@
         Input provided by parameters (if specified)
 .OUTPUTS
     [System.String]
-        Output provided via console; 
+        Output provided via console;
         (file) Extracted EverNote database in BackupPath
         (file) logfile(s) in BackupPath
 #>
@@ -83,7 +83,7 @@ PARAM(
         Position = 1
     )]
     [String]$CloudStorageProvider = "${env:ProgramFiles(x86)}\ownCloud\owncloud.exe",
-    
+
     [Parameter(
         Mandatory = $False,
         ValueFromPipelineByPropertyName = $True,

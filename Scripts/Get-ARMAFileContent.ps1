@@ -33,7 +33,7 @@
         1. PowerShell 3.0 or higher.
         2. (Read)Access to folder containing the ARMA ItemList*.hpp files.
         3. (Read/Write)Access to folder/file for output file.
-    
+
     VERSION HISTORY:
     0.3 - Please check Github for changes
 
@@ -51,7 +51,7 @@ PARAM(
     [Parameter(
         Mandatory = $True,
         ValueFromPipeline = $True,
-        ValueFromPipelineByPropertyName = $True, 
+        ValueFromPipelineByPropertyName = $True,
         Position = 0,
         Helpmessage = 'Please provide the path to the location of the ARMA files.'
     )]
@@ -68,7 +68,7 @@ PARAM(
     [Parameter(
         Mandatory = $True,
         ValueFromPipeline = $False,
-        ValueFromPipelineByPropertyName = $False, 
+        ValueFromPipelineByPropertyName = $False,
         Position = 1,
         Helpmessage = 'Please provide the path and filename where to store the output.'
     )]
@@ -120,7 +120,7 @@ ForEach ($FileName in $ARMALocation) {
                 'Price'          = ((($ItemName.Split(' ', '3')[2]).Split(';', '3').Trim()[1]).Split('=', '2').Trim())[1]
             } # END Data
             New-Object -TypeName PSObject -Property $Data | Export-Csv -Path $OutputFileName -NoTypeInformation -Append
-        } # END Try Data 
+        } # END Try Data
         Catch {
             Write-Warning -Message "Skipping $($FileName) because it contains no data."
             Write-Verbose -Message "Item = $($Item)"

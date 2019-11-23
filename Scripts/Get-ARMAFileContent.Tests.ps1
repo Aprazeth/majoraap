@@ -14,7 +14,7 @@
     .\Invoke-Pester
 
     -----
-    This will run Pester, and run through this script to test Get-ARMAFileContent.ps1 
+    This will run Pester, and run through this script to test Get-ARMAFileContent.ps1
 #>
 [CmdletBinding()]
 PARAM()
