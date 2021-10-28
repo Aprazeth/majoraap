@@ -1,7 +1,7 @@
 // See https://go.microsoft.com/fwlink/?LinkId=733558
 // for the documentation about the tasks.json format
 // A task runner that calls pester for powershell testing.
-// http://www.tomsitpro.com/articles/setting-up-visual-studio-code-tasks,1-3514.html
+// https://www.tomsitpro.com/articles/setting-up-visual-studio-code-tasks,1-3514.html
 // Modified 28 October 2021
 {
     "version": "2.0.0",
