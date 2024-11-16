@@ -65,3 +65,5 @@ All checks for ScriptAnalyzer should return '**0**'; anything higher I'll consid
 ## Why the name **majoraap**
 
 I had a website for several years with that name. It was where I started with a few posts on this very topic (scripts); I figured that a proper way to distribute them - and make them available to everyone - was to use Github. The website has since been taken offline, yet I continue to work on my scripts here.
+
+Also, you can follow or reach me over on <a rel="me" href="https://mastodon.social/@aprazeth">Mastodon</a>
