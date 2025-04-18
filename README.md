@@ -1,10 +1,21 @@
 # Table of Contents
 
 - [Table of Contents](#table-of-contents)
+  - [Statusbadges](#statusbadges)
+    - [General](#general)
+    - [Security and code quality](#security-and-code-quality)
   - [Description](#description)
     - [Quick listing of my scripts](#quick-listing-of-my-scripts)
       - [Settings, extensions I use(d) and recommend](#settings-extensions-i-use-d-and-recommend)
     - [Why the name **majoraap**](#why-the-name-majoraap)
+
+## Statusbadges
+
+### General
+[![pages-build-deployment](https://github.com/Aprazeth/majoraap/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/Aprazeth/majoraap/actions/workflows/pages/pages-build-deployment)
+
+### Security and code quality
+[![PSScriptAnalyzer](https://github.com/Aprazeth/majoraap/actions/workflows/powershell.yml/badge.svg)](https://github.com/Aprazeth/majoraap/actions/workflows/powershell.yml)[![DevSkim](https://github.com/Aprazeth/majoraap/actions/workflows/devskim-analysis.yml/badge.svg)](https://github.com/Aprazeth/majoraap/actions/workflows/devskim-analysis.yml)
 
 ## Description
 
